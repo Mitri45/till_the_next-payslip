@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import ExpensesList from "../components/ExpensesList";
+import ExpensesList from "../components/Expenses/ExpensesList";
 
 export default function ExpensesScreen() {
   return (

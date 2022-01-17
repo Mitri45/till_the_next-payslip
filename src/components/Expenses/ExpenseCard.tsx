@@ -8,16 +8,16 @@ import {
   Paragraph,
   IconButton,
 } from "react-native-paper";
-import { IncomeTypeWeekDay } from "../utils/IncomeClass";
+import { RepeatInterval } from "../../utils/ExpenseClass";
 
-export default function IncomeCard({
+export default function ExpenseCard({
   name,
   amount,
-  repeatDay,
+  repeatInterval,
 }: {
   name: string;
   amount: number;
-  repeatDay: IncomeTypeWeekDay;
+  repeatInterval: RepeatInterval;
 }) {
   return (
     <Card style={styles.container}>
@@ -29,7 +29,7 @@ export default function IncomeCard({
       />
       <Card.Content>
         <Paragraph>Amount: {amount}</Paragraph>
-        <Paragraph>Repeat Interval: {repeatDay}</Paragraph>
+        <Paragraph>Repeat Interval: {repeatInterval}</Paragraph>
       </Card.Content>
       <Card.Actions>
         <Button>Cancel</Button>

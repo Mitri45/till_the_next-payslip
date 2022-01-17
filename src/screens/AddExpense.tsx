@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import ExpensesInput from "../components/ExpensesInput";
+import ExpensesInput from "../components/Expenses/ExpensesInput";
 
 export default function AddExpense() {
   return (

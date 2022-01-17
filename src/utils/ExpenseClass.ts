@@ -1,3 +1,4 @@
+import moment from "moment";
 export const repeatInterval = [
   "Daily",
   "Weekly",
@@ -12,6 +13,7 @@ export class Expense {
   name: string;
   amount: number;
   startDate: Date;
+  nextPayDate: Date;
   endDate: Date;
   repeatable: boolean;
   repeatInterval: RepeatInterval;
@@ -21,6 +23,7 @@ export class Expense {
     name: string,
     amount: number,
     startDate: Date,
+    nextPayDate: Date,
     endDate: Date,
     repeatable: boolean,
     repeatInterval: RepeatInterval,
@@ -29,6 +32,7 @@ export class Expense {
     this.amount = amount;
     this.name = name;
     this.startDate = startDate;
+    this.nextPayDate = nextPayDate;
     this.endDate = endDate;
     this.repeatable = repeatable;
     this.repeatInterval = repeatInterval;

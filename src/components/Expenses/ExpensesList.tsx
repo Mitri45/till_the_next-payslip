@@ -1,9 +1,9 @@
 import React from "react";
 import ExpenseCard from "./ExpenseCard";
 import { FlatList, View } from "react-native";
-import { Expense } from "../utils/ExpenseClass";
+import { Expense } from "../../utils/ExpenseClass";
 import { useRecoilValue } from "recoil";
-import { expensesState } from "../recoil/atoms";
+import { expensesState } from "../../recoil/atoms";
 
 export default function ExpensesList() {
   const expenses = useRecoilValue(expensesState);

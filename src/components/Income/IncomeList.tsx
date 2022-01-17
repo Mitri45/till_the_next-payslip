@@ -1,10 +1,10 @@
 import React from "react";
 import IncomeCard from "./IncomeCard";
-import { getAllKeys, getItem } from "../utils/AsyncStorageUtils";
+import { getAllKeys, getItem } from "../../utils/AsyncStorageUtils";
 import { FlatList, View } from "react-native";
-import { Income } from "../utils/IncomeClass";
+import { Income } from "../../utils/IncomeClass";
 import { useRecoilValue } from "recoil";
-import { incomeState } from "../recoil/atoms";
+import { incomeState } from "../../recoil/atoms";
 
 export default function IncomeList() {
   const income = useRecoilValue(incomeState);
@@ -13,7 +13,7 @@ export default function IncomeList() {
     <IncomeCard
       name={item.name}
       amount={item.amount}
-      repeatDay={item.repeatDay}
+      repeatDay={item.repeatDayOfTheWeek}
       key={item.name}
     />
   );

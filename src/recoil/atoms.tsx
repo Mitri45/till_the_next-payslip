@@ -10,3 +10,13 @@ export const incomeState = atom<Income[]>({
   key: "incomeState",
   default: [],
 });
+
+export const currentBalance = atom<number>({
+  key: "currentBalance",
+  default: 0,
+});
+
+export const spendTillPayday = atom<number>({
+  key: "spendTillPayday",
+  default: 0,
+});

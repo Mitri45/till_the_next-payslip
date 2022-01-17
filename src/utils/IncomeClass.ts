@@ -1,10 +1,6 @@
 import moment from "moment";
-moment.updateLocale("nz", {
-  week: {
-    dow: 1,
-  },
-});
-export const weekDays = moment.weekdays(true);
+export const weekDaysArray = moment.weekdays(true);
+
 export const repeatInterval = [
   "Daily",
   "Weekly",
@@ -13,23 +9,29 @@ export const repeatInterval = [
 ] as const;
 
 export type IncomeTypeRepeat = typeof repeatInterval[number];
-export type IncomeTypeWeekDay = typeof weekDays[number];
+export type IncomeTypeWeekDay = typeof weekDaysArray[number];
 
 export class Income {
   id: number;
   amount: number;
   name: string;
-  repeatDay: IncomeTypeWeekDay;
+  repeatInterval: IncomeTypeWeekDay;
+  repeatDayOfTheWeek: IncomeTypeWeekDay;
+  nextPayDate: Date;
 
   constructor(
-    name: string,
+    id: number,
     amount: number,
-    repeatDay: IncomeTypeWeekDay,
-    id: number
+    name: string,
+    repeatInterval: IncomeTypeWeekDay,
+    repeatDayOfTheWeek: IncomeTypeWeekDay,
+    nextPayDate: Date
   ) {
+    this.id = id;
     this.name = name;
     this.amount = amount;
-    this.repeatDay = repeatDay;
-    this.id = id;
+    this.repeatInterval = repeatInterval;
+    this.repeatDayOfTheWeek = repeatDayOfTheWeek;
+    this.nextPayDate = nextPayDate;
   }
 }

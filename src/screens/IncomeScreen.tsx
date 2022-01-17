@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import IncomeList from "../components/IncomeList";
+import IncomeList from "../components/Income/IncomeList";
 
 export default function IncomeScreen() {
   return (

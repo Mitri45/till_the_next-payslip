@@ -2,107 +2,59 @@ import React from "react";
 import { StyleSheet, SafeAreaView, Text } from "react-native";
 import MoneyToSpend from "../components/MoneyToSpend";
 import { FAB, Portal, Provider } from "react-native-paper";
-import { HomeStackParamList } from "../../App";
+import { HomeStackParamList } from "./Navigation";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { expensesState, incomeState } from "../recoil/atoms";
-import { Expense } from "../utils/ExpenseClass";
-import { getAllKeys, getItem } from "../utils/AsyncStorageUtils";
-import { Income } from "../utils/IncomeClass";
+import { incomeState } from "../recoil/atoms";
+import { useRecoilValue } from "recoil";
 
 type NavProps = NativeStackScreenProps<HomeStackParamList, "Home">;
 
 export default function HomeScreen({ navigation }: NavProps) {
-  const setExpenses = useSetRecoilState(expensesState);
-  const [income, setIncome] = useRecoilState(incomeState);
-
   const { navigate } = navigation;
   const [stateFAB, setStateFAB] = React.useState({ open: false });
   const { open } = stateFAB;
   const onStateChange = ({ open }: { open: boolean }) => setStateFAB({ open });
-
-  React.useEffect(() => {
-    const initAppState = async () => {
-      try {
-        const getIncome = await getItem("income");
-        const incomeToAdd: Income[] = [];
-        if (getIncome) {
-          incomeToAdd.push(JSON.parse(getIncome));
-          setIncome(incomeToAdd);
-          console.log("income ARR", incomeToAdd);
-        }
-        const keys = await getAllKeys();
-        if (keys && keys.length > 0) {
-          const expensesToAdd: Expense[] = [];
-          const filteredKeys = keys.filter((item) => item !== "income");
-          for (let i = 0; i < filteredKeys.length; i++) {
-            const getExpense = await getItem(filteredKeys[i]);
-            if (getExpense) {
-              expensesToAdd.push(JSON.parse(getExpense));
-            }
-          }
-          console.log("expensesToAdd", expensesToAdd);
-          setExpenses(expensesToAdd);
-        }
-      } catch (e) {
-        console.log("error", e);
-      }
-    };
-    initAppState();
-  }, []);
-
-  console.log("income HOME", income);
-  const componentToRender =
-    income.length > 0 ? (
-      <SafeAreaView style={styles.container}>
-        <React.Suspense fallback={<Text>Loading...</Text>}>
-          <MoneyToSpend />
-        </React.Suspense>
-        <Provider>
-          <Portal>
-            <FAB.Group
-              open={open}
-              visible={true}
-              icon={open ? "minus" : "plus"}
-              actions={[
-                {
-                  icon: "currency-usd",
-                  label: "Income",
-                  onPress: () => {
-                    navigate("AddIncome");
-                  },
+  const income = useRecoilValue(incomeState);
+  console.log("income in HOME", income);
+  return (
+    <SafeAreaView style={styles.container}>
+      <React.Suspense fallback={<Text>Loading...</Text>}>
+        {income.length > 0 && <MoneyToSpend />}
+      </React.Suspense>
+      <Provider>
+        <Portal>
+          <FAB.Group
+            open={open}
+            visible={true}
+            icon={open ? "minus" : "plus"}
+            actions={[
+              {
+                icon: "currency-usd",
+                label: "Income",
+                onPress: () => {
+                  navigate("AddIncome");
                 },
-                {
-                  icon: "currency-usd-off",
-                  label: "Expenses",
-                  onPress: () => {
-                    if (!income) return;
-                    navigate("AddExpense");
-                  },
+              },
+              {
+                icon: "currency-usd-off",
+                label: "Expenses",
+                onPress: () => {
+                  if (!income) return;
+                  navigate("AddExpense");
                 },
-              ]}
-              onStateChange={onStateChange}
-              onPress={() => {
-                if (open) {
-                  // do something if the speed dial is open
-                }
-              }}
-            />
-          </Portal>
-        </Provider>
-      </SafeAreaView>
-    ) : (
-      <SafeAreaView style={styles.container}>
-        <Text>No income set, click plus icon to add</Text>
-        <FAB
-          style={styles.fab}
-          icon="plus"
-          onPress={() => navigate("AddIncome")}
-        />
-      </SafeAreaView>
-    );
-
-  return componentToRender;
+              },
+            ]}
+            onStateChange={onStateChange}
+            onPress={() => {
+              if (open) {
+                // do something if the speed dial is open
+              }
+            }}
+          />
+        </Portal>
+      </Provider>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({

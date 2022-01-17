@@ -9,16 +9,20 @@ import {
   Button,
   Pressable,
 } from "react-native";
-import { setItem, clearAll, getAllKeys } from "../utils/AsyncStorageUtils";
+import { setItem, clearAll, getAllKeys } from "../../utils/AsyncStorageUtils";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Expense, repeatInterval } from "../utils/ExpenseClass";
+import {
+  Expense,
+  repeatInterval,
+  RepeatInterval,
+} from "../../utils/ExpenseClass";
 import Checkbox from "expo-checkbox";
 import { useNavigation } from "@react-navigation/native";
-import { HomeStackParamList } from "../../App";
+import { HomeStackParamList } from "../../screens/Navigation";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useSetRecoilState } from "recoil";
-import { expensesState } from "../recoil/atoms";
+import { expensesState } from "../../recoil/atoms";
 
 type NavProps = NativeStackNavigationProp<HomeStackParamList, "AddExpense">;
 
@@ -33,15 +37,41 @@ const ExpensesInput = () => {
   const [showDatePicker, setShowDatePicker] = React.useState(false);
   const [name, setName] = React.useState("");
 
+  const getNextPayDate = (startDate: Date, interval: RepeatInterval) => {
+    const nextPayDate = moment(startDate);
+    switch (interval) {
+      case repeatInterval[0]:
+        nextPayDate.add(1, "days");
+        break;
+      case repeatInterval[1]:
+        nextPayDate.add(7, "days");
+        break;
+      case repeatInterval[2]:
+        nextPayDate.add(14, "days");
+        break;
+      case repeatInterval[3]:
+        nextPayDate.add(1, "months");
+        break;
+      case repeatInterval[3]:
+        nextPayDate.add(1, "years");
+        break;
+      default:
+        break;
+    }
+    return nextPayDate.toDate();
+  };
+
   const onPressSave = async () => {
     if (!amount) return;
     const storageKeysArr = await getAllKeys();
     if (storageKeysArr) {
       const storageLength = storageKeysArr.length;
+      const nextPayDate = getNextPayDate(startDate, interval);
       const expense = new Expense(
         name,
         parseInt(amount),
         startDate,
+        nextPayDate,
         endDate,
         isRepeatable,
         interval,
@@ -64,8 +94,9 @@ const ExpensesInput = () => {
   };
 
   const onDateChange = (event: any, newDate?: Date | undefined) => {
+    setShowDatePicker(false);
+    console.log("newDate", newDate);
     if (event && newDate) {
-      setShowDatePicker(false);
       setStartDate(newDate);
     }
   };
@@ -113,8 +144,7 @@ const ExpensesInput = () => {
                   testID="dateTimePicker"
                   value={startDate}
                   mode="date"
-                  is24Hour={true}
-                  display="default"
+                  display="calendar"
                   onChange={onDateChange}
                 />
               )}
